@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Defensive Risk Assessment Model — Iranian Threat Landscape</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0c0f;
+  --surface: #111418;
+  --surface2: #181c22;
+  --border: #232830;
+  --border2: #2e3540;
+  --text: #e8eaf0;
+  --text2: #8a93a2;
+  --text3: #555e6b;
+  --accent: #c8a96e;
+  --accent2: #8cb8d4;
+  --red: #e05252;
+  --orange: #e08a3c;
+  --yellow: #d4b84a;
+  --green: #5aad7a;
+  --crit: #e05252;
+  --high: #e08a3c;
+  --rel: #d4b84a;
+  --mod: #5aad7a;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'IBM Plex Sans', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.6; }
+
+/* PRINT */
+@media print {
+  body { background: #fff; color: #111; }
+  .no-print { display: none !important; }
+  .card { border-color: #ccc; background: #fafafa; }
+  .hero { background: #f0f4f8; }
+}
+
+/* LAYOUT */
+.page { max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; }
+
+/* HERO */
+.hero {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border2);
+  padding: 48px 24px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(200,169,110,0.04) 40px),
+              repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(200,169,110,0.03) 80px);
+}
+.hero-inner { position: relative; z-index: 1; }
+.hero-tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  color: var(--accent);
+  border: 1px solid rgba(200,169,110,.3);
+  padding: 4px 12px;
+  border-radius: 2px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+.hero h1 {
+  font-family: var(--mono);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -.02em;
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+.hero p {
+  color: var(--text2);
+  font-size: 14px;
+  max-width: 620px;
+  margin: 0 auto 28px;
+  line-height: 1.7;
+}
+.hero-meta {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.hero-stat { text-align: center; }
+.hero-stat .val { font-family: var(--mono); font-size: 22px; font-weight: 600; color: var(--accent); }
+.hero-stat .lbl { font-size: 11px; color: var(--text3); margin-top: 2px; text-transform: uppercase; letter-spacing: .08em; }
+
+/* SECTIONS */
+.section { margin-top: 48px; }
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.section-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 600;
+  letter-spacing: .1em;
+}
+.section-title {
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+.section-sub { font-size: 13px; color: var(--text2); margin-top: 2px; }
+
+/* CARDS */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+}
+.card-title {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+/* FORMULA BLOCK */
+.formula-block {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  padding: 20px 24px;
+  font-family: var(--mono);
+  margin: 16px 0;
+}
+.formula-main {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 14px;
+  letter-spacing: .02em;
+}
+.formula-vars {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+.formula-var {
+  background: rgba(200,169,110,.06);
+  border: 1px solid rgba(200,169,110,.15);
+  border-radius: 3px;
+  padding: 10px 12px;
+}
+.fv-key { font-size: 14px; font-weight: 600; color: var(--accent); }
+.fv-name { font-size: 12px; color: var(--text2); margin: 3px 0 2px; font-family: var(--sans); }
+.fv-range { font-size: 10px; color: var(--text3); }
+
+/* EXPLANATION TEXT */
+.explain {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.75;
+  margin-bottom: 14px;
+}
+.explain strong { color: var(--text); font-weight: 500; }
+.explain code {
+  font-family: var(--mono);
+  font-size: 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  padding: 1px 6px;
+  border-radius: 3px;
+  color: var(--accent);
+}
+
+/* FACTOR ROWS */
+.factor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+@media (max-width: 640px) { .factor-grid { grid-template-columns: 1fr; } }
+.factor-card {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  padding: 16px 18px;
+}
+.fc-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.fc-letter {
+  width: 32px; height: 32px;
+  background: rgba(200,169,110,.12);
+  border: 1px solid rgba(200,169,110,.3);
+  border-radius: 3px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--accent);
+  flex-shrink: 0;
+}
+.fc-name { font-size: 13px; font-weight: 500; color: var(--text); }
+.fc-desc { font-size: 12px; color: var(--text2); line-height: 1.6; }
+.fc-sub { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.fc-sub-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--text3); font-family: var(--mono);
+}
+.fc-sub-item::before { content: '→'; color: var(--accent); }
+.fc-weight {
+  display: inline-block;
+  background: rgba(200,169,110,.1);
+  border: 1px solid rgba(200,169,110,.2);
+  border-radius: 2px;
+  padding: 1px 5px;
+  font-size: 10px;
+  color: var(--accent);
+  margin-left: auto;
+}
+
+/* COUNTRY TABLE */
+.country-table { width: 100%; border-collapse: collapse; }
+.country-table th {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border2);
+}
+.country-table td {
+  padding: 12px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.country-table tr:last-child td { border-bottom: none; }
+.country-table tr:hover td { background: rgba(255,255,255,.02); }
+.ct-name { font-weight: 500; color: var(--text); font-size: 13px; }
+.ct-mono { font-family: var(--mono); font-size: 12px; color: var(--text2); }
+.ct-score { font-family: var(--mono); font-size: 16px; font-weight: 600; }
+.badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 2px;
+  font-weight: 600;
+}
+.badge-crit { background: rgba(224,82,82,.15); color: var(--crit); border: 1px solid rgba(224,82,82,.3); }
+.badge-high { background: rgba(224,138,60,.15); color: var(--high); border: 1px solid rgba(224,138,60,.3); }
+.badge-rel  { background: rgba(212,184,74,.15); color: var(--rel);  border: 1px solid rgba(212,184,74,.3); }
+.badge-mod  { background: rgba(90,173,122,.15);  color: var(--mod);  border: 1px solid rgba(90,173,122,.3); }
+.bar-cell { min-width: 120px; }
+.bar-bg { background: var(--surface2); border-radius: 2px; height: 6px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 2px; }
+
+/* HEATMAP */
+.heatmap-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+@media (max-width: 640px) { .heatmap-grid { grid-template-columns: repeat(2, 1fr); } }
+.hm-cell {
+  border-radius: 4px;
+  padding: 16px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s;
+  border: 1px solid transparent;
+}
+.hm-cell:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,.4); }
+.hm-name { font-family: var(--mono); font-size: 11px; font-weight: 600; margin-bottom: 6px; }
+.hm-score { font-family: var(--mono); font-size: 20px; font-weight: 600; }
+.hm-lbl { font-size: 9px; text-transform: uppercase; letter-spacing: .08em; margin-top: 4px; opacity: .8; }
+
+/* LEGEND */
+.legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+.leg { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text2); }
+.leg-box { width: 12px; height: 12px; border-radius: 2px; }
+
+/* CALCULATOR */
+.calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+@media (max-width: 640px) { .calc-grid { grid-template-columns: 1fr; } }
+.slider-block { margin-bottom: 18px; }
+.slider-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.slider-label { font-size: 12px; color: var(--text2); font-family: var(--mono); }
+.slider-val { font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--accent); }
+.slider-sub { font-size: 11px; color: var(--text3); margin-bottom: 8px; }
+input[type=range] {
+  width: 100%;
+  -webkit-appearance: none;
+  height: 4px;
+  background: var(--border2);
+  border-radius: 2px;
+  outline: none;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid var(--bg);
+}
+.result-panel {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  padding: 24px;
+  text-align: center;
+  position: sticky;
+  top: 20px;
+}
+.result-label { font-family: var(--mono); font-size: 10px; color: var(--text3); letter-spacing: .12em; text-transform: uppercase; margin-bottom: 10px; }
+.result-score { font-family: var(--mono); font-size: 52px; font-weight: 600; line-height: 1; margin-bottom: 10px; transition: color .2s; }
+.result-badge { margin-bottom: 20px; }
+.result-formula {
+  background: rgba(0,0,0,.3);
+  border-radius: 3px;
+  padding: 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+  line-height: 1.8;
+  text-align: left;
+}
+.result-formula span { color: var(--accent); }
+.result-action {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 3px;
+  font-size: 12px;
+  line-height: 1.6;
+  text-align: left;
+}
+
+/* ATTACK TYPES */
+.attack-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (max-width: 640px) { .attack-grid { grid-template-columns: 1fr; } }
+.at-card {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  padding: 16px;
+}
+.at-icon { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); margin-bottom: 8px; }
+.at-name { font-weight: 500; font-size: 13px; color: var(--text); margin-bottom: 4px; }
+.at-pct { font-family: var(--mono); font-size: 24px; font-weight: 600; margin: 6px 0; }
+.at-desc { font-size: 11px; color: var(--text2); line-height: 1.6; }
+.at-targets { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+.at-targets-label { font-size: 10px; color: var(--text3); font-family: var(--mono); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+.at-target-item { font-size: 11px; color: var(--text2); padding: 2px 0; }
+.at-target-item::before { content: '— '; color: var(--accent); }
+
+/* MATH STEP */
+.math-step {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  padding: 18px 20px;
+  margin-bottom: 12px;
+}
+.ms-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.ms-num {
+  width: 28px; height: 28px;
+  background: rgba(200,169,110,.12);
+  border: 1px solid rgba(200,169,110,.3);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent);
+  flex-shrink: 0;
+}
+.ms-title { font-weight: 500; color: var(--text); font-size: 13px; }
+.ms-formula {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--accent2);
+  background: rgba(140,184,212,.06);
+  border: 1px solid rgba(140,184,212,.15);
+  border-radius: 3px;
+  padding: 10px 14px;
+  margin: 10px 0;
+}
+.ms-sub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; margin-top: 10px; }
+.ms-sub-item {
+  background: rgba(0,0,0,.2);
+  border-radius: 3px;
+  padding: 8px 10px;
+  font-size: 11px;
+}
+.ms-sub-key { font-family: var(--mono); color: var(--accent); font-weight: 600; }
+.ms-sub-name { color: var(--text2); margin: 2px 0; }
+.ms-sub-weight { color: var(--text3); font-family: var(--mono); font-size: 10px; }
+.ms-result {
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: 12px;
+  background: rgba(200,169,110,.06);
+  border: 1px solid rgba(200,169,110,.2);
+  color: var(--text2);
+}
+.ms-result span { color: var(--accent); }
+
+/* SOURCE BOX */
+.source-box {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-left: 3px solid var(--accent2);
+  border-radius: 4px;
+  padding: 14px 18px;
+  margin-top: 12px;
+}
+.source-box-title { font-family: var(--mono); font-size: 10px; color: var(--accent2); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 8px; }
+.source-item { font-size: 12px; color: var(--text2); padding: 3px 0; }
+.source-item::before { content: '↗ '; color: var(--accent2); font-family: var(--mono); }
+
+/* DOWNLOAD BTN */
+.dl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent);
+  color: #0a0c0f;
+  border: none;
+  border-radius: 3px;
+  padding: 10px 20px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  margin-top: 24px;
+  transition: opacity .15s;
+}
+.dl-btn:hover { opacity: .85; }
+
+/* FOOTER */
+.footer {
+  margin-top: 60px;
+  padding: 24px 0;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.footer-left { font-family: var(--mono); font-size: 11px; color: var(--text3); }
+.footer-right { font-size: 11px; color: var(--text3); }
+
+/* DETAIL PANEL */
+.detail-panel {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  padding: 16px 20px;
+  margin-top: 12px;
+  display: none;
+  animation: fadeIn .2s ease;
+}
+.detail-panel.show { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+.dp-name { font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--accent); margin-bottom: 8px; }
+.dp-hist { font-size: 12px; color: var(--text2); line-height: 1.7; margin-bottom: 10px; }
+.dp-action { font-size: 12px; color: var(--text); line-height: 1.7; }
+.dp-action strong { color: var(--accent2); }
+.dp-factors {
+  display: flex; gap: 12px; flex-wrap: wrap;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.dp-factor { font-family: var(--mono); font-size: 11px; color: var(--text3); }
+.dp-factor span { color: var(--accent); }
+
+/* NORMALIZATION EXPLAINER */
+.norm-box {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  padding: 20px;
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 640px) { .norm-box { grid-template-columns: 1fr; } }
+.norm-side { }
+.norm-title { font-family: var(--mono); font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 10px; }
+.norm-scale { display: flex; flex-direction: column; gap: 6px; }
+.ns-row { display: flex; align-items: center; gap: 10px; }
+.ns-range { font-family: var(--mono); font-size: 12px; color: var(--text2); min-width: 70px; }
+.ns-bar { flex: 1; height: 8px; border-radius: 2px; }
+.ns-label { font-size: 11px; min-width: 60px; font-weight: 500; }
+
+/* TABS for attack type detail */
+.tabs { display: flex; gap: 0; margin-bottom: 16px; border-bottom: 1px solid var(--border2); }
+.tab {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+  padding: 8px 16px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color .15s;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* PRINT BUTTON */
+.print-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  color: var(--text2);
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  padding: 8px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color .15s, color .15s;
+  margin-left: 10px;
+}
+.print-btn:hover { border-color: var(--accent); color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">Defensive Risk Model · v1.0 · March 2026</div>
+    <h1>Iranian Threat Assessment<br>Risk Scoring System</h1>
+    <p>A quantitative framework for defensive security planning based on documented historical attack patterns from 2019 to 2026. This model calculates exposure scores to prioritize protective measures — not offensive targeting.</p>
+    <div class="hero-meta">
+      <div class="hero-stat"><div class="val">~6,600</div><div class="lbl">Projectiles documented</div></div>
+      <div class="hero-stat"><div class="val">10</div><div class="lbl">Countries analyzed</div></div>
+      <div class="hero-stat"><div class="val">4</div><div class="lbl">Core risk factors</div></div>
+      <div class="hero-stat"><div class="val">0–100</div><div class="lbl">Normalized score range</div></div>
+    </div>
+    <div style="margin-top:24px">
+      <button class="dl-btn no-print" onclick="window.print()">↓ Save / Print this report</button>
+      <button class="print-btn no-print" onclick="exportData()">↗ Export data as JSON</button>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- SECTION 1: THE MASTER FORMULA -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">01</div>
+    <div>
+      <div class="section-title">The Master Formula</div>
+      <div class="section-sub">How the final risk score is calculated from four independent dimensions</div>
+    </div>
+  </div>
+
+  <p class="explain">
+    The model uses a <strong>multiplicative risk formula</strong>, meaning all four factors amplify each other. A location with moderate scores on all factors can still reach a high final score — just as a location very strong on one factor but weak on others stays contained. This reflects real-world risk: a target that is highly exposed but well-defended is less dangerous than one moderately exposed and completely unprotected.
+  </p>
+
+  <div class="formula-block">
+    <div class="formula-main">Rn = ( A × E × V × I ) ÷ 625 × 100</div>
+    <p style="font-size:12px;color:#8a93a2;font-family:var(--sans);margin-bottom:12px">Each variable is scored 1–5. The maximum raw product is 5⁴ = 625, which we divide by to normalize the result into a 0–100 scale.</p>
+    <div class="formula-vars">
+      <div class="formula-var">
+        <div class="fv-key">A</div>
+        <div class="fv-name">Threat (Ameaça)</div>
+        <div class="fv-range">Scale: 1 (negligible) → 5 (confirmed pattern)</div>
+      </div>
+      <div class="formula-var">
+        <div class="fv-key">E</div>
+        <div class="fv-name">Exposure</div>
+        <div class="fv-range">Scale: 1 (isolated) → 5 (fully exposed)</div>
+      </div>
+      <div class="formula-var">
+        <div class="fv-key">V</div>
+        <div class="fv-name">Vulnerability</div>
+        <div class="fv-range">Scale: 1 (hardened) → 5 (unprotected)</div>
+      </div>
+      <div class="formula-var">
+        <div class="fv-key">I</div>
+        <div class="fv-name">Impact</div>
+        <div class="fv-range">Scale: 1 (negligible) → 5 (catastrophic)</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="explain">
+    Why multiply and not add? <strong>Addition treats factors as independent</strong> — a score of 5+1+1+1 = 8 would look similar to 2+2+2+2 = 8. But in real risk, a target with maximum threat and zero vulnerability is very different from one with moderate levels across all four. <strong>Multiplication captures interdependence</strong>: the formula punishes combinations where multiple factors are simultaneously high.
+  </p>
+
+  <div class="norm-box">
+    <div class="norm-side">
+      <div class="norm-title">Score classification</div>
+      <div class="norm-scale">
+        <div class="ns-row"><div class="ns-range">81 – 100</div><div class="ns-bar" style="background:var(--crit)"></div><div class="ns-label" style="color:var(--crit)">Critical</div></div>
+        <div class="ns-row"><div class="ns-range">61 – 80</div><div class="ns-bar" style="background:var(--high);width:80%"></div><div class="ns-label" style="color:var(--high)">High</div></div>
+        <div class="ns-row"><div class="ns-range">41 – 60</div><div class="ns-bar" style="background:var(--rel);width:60%"></div><div class="ns-label" style="color:var(--rel)">Relevant</div></div>
+        <div class="ns-row"><div class="ns-range">21 – 40</div><div class="ns-bar" style="background:var(--mod);width:40%"></div><div class="ns-label" style="color:var(--mod)">Moderate</div></div>
+        <div class="ns-row"><div class="ns-range">0 – 20</div><div class="ns-bar" style="background:var(--border2);width:20%"></div><div class="ns-label" style="color:var(--text3)">Low</div></div>
+      </div>
+    </div>
+    <div class="norm-side">
+      <div class="norm-title">Recommended posture by score</div>
+      <div style="font-size:12px;color:var(--text2);line-height:2">
+        <div><span style="color:var(--crit);font-family:var(--mono)">81–100 →</span> Immediate contingency activation</div>
+        <div><span style="color:var(--high);font-family:var(--mono)">61–80 →</span> Partial contingency + 24h alert</div>
+        <div><span style="color:var(--rel);font-family:var(--mono)">41–60 →</span> Enhanced monitoring posture</div>
+        <div><span style="color:var(--mod);font-family:var(--mono)">21–40 →</span> Reinforced standard monitoring</div>
+        <div><span style="color:var(--text3);font-family:var(--mono)">0–20 →</span> Routine periodic review</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2: FACTOR BREAKDOWN -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">02</div>
+    <div>
+      <div class="section-title">Factor-by-Factor Calculation</div>
+      <div class="section-sub">Each of the four main variables is itself a weighted sub-formula</div>
+    </div>
+  </div>
+
+  <p class="explain">
+    Each of the four primary factors (A, E, V, I) is not a single estimate — it is calculated from <strong>multiple sub-variables with assigned weights</strong>. The weights reflect how much each sub-variable contributes to the final factor score. They always sum to 1.0 (100%).
+  </p>
+
+  <!-- FACTOR A -->
+  <div class="math-step">
+    <div class="ms-header">
+      <div class="ms-num">A</div>
+      <div class="ms-title">Threat — measuring attack probability and historical intent</div>
+    </div>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.7">The Threat score answers: <em>How likely is this location to be targeted based on past behavior and current context?</em> It combines four sub-variables:</p>
+    <div class="ms-formula">A = (0.35 × P) + (0.25 × H) + (0.20 × S) + (0.20 × T)</div>
+    <div class="ms-sub-grid">
+      <div class="ms-sub-item">
+        <div class="ms-sub-key">P — Strategic Priority</div>
+        <div class="ms-sub-name">How valuable is this target to an attacker? Military base, energy hub, symbolic landmark.</div>
+        <div class="ms-sub-weight">Weight: 35% · Scale: 1–5</div>
+      </div>
+      <div class="ms-sub-item">
+        <div class="ms-sub-key">H — Historical Pattern</div>
+        <div class="ms-sub-name">Has this type of target been struck before? Documented precedent increases weight significantly.</div>
+        <div class="ms-sub-weight">Weight: 25% · Scale: 1–5</div>
+      </div>
+      <div class="ms-sub-item">
+        <div class="ms-sub-key">S — Signaling / Escalation</div>
+        <div class="ms-sub-name">Current public statements, alerts, mobilization, rhetoric. Higher = more explicit threat.</div>
+        <div class="ms-sub-weight">Weight: 20% · Scale: 1–5</div>
+      </div>
+      <div class="ms-sub-item">
+        <div class="ms-sub-key">T — Regional Tension</div>
+        <div class="ms-sub-name">Overall conflict temperature in the surrounding region. Serves as a baseline amplifier.</div>
+        <div class="ms-sub-weight">Weight: 20% · Scale: 1–5</div>
+      </div>
+    </div>
+    <div class="ms-result">Example (UAE energy infrastructure, March 2026): A = (0.35×5) + (0.25×5) + (0.20×4) + (0.20×5) = <span>4.80</span></div>
+  </div>
+
+  <!-- FACTOR E -->
+  <div class="math-step">
+    <div class="ms-header">
+      <div class="ms-num">E</div>
+      <div class="ms-title">Exposure — how reachable and identifiable is this location</div>
+    </div>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.7">Exposure measures how geographically and operationally "in the open" a location is. A hardened base in a remote area may have low exposure; a major port on a well-known coastline has very high exposure.</p>
+    <div class="ms-formula">E = (0.40 × G) + (0.30 × D) + (0.20 × C) + (0.10 × O)</div>
+    <div class="ms-sub-grid">
+      <div class="ms-sub-item">
+        <div class="ms-sub-key">G — Geography / Position</div>
+        <div class="ms-sub-name">Is the location within missile or drone range? On a coastline? Near a conflict corridor?</div>
+        <div class="ms-sub-weight">Weight: 40% · Scale: 1–5</div>
+      </div>
+      <div class="ms-sub-item">
+        <div class="ms-sub-key">D — Asset Density</div>
+        <div class="ms-sub-name">Density of high-value assets nearby. Clustered assets raise collective exposure.</div>
+        <div class="ms-sub-weight">Weight: 30% · Scale: 1–5</div>
+      </div>
+      <div class="ms-sub-item">
+        <div class="ms-sub-key">C — Logistical Connectivity</div>
+        <div class="ms-sub-name">Connected to key ports, roads, pipelines, airports — interdependence multiplies exposure.</div>
+        <div class="ms-sub-weight">Weight: 20% · Scale: 1–5</div>
+      </div>
+      <div class="ms-sub-item">
+        <div class="ms-sub-key">O — Observability</div>
+        <div class="ms-sub-name">Can the location be easily identified via satellite, public data, or OSINT? Known locations are easier to target.</div>
+        <div class="ms-sub-weight">Weight: 10% · Scale: 1–5</div>
+      </div>
+    </div>
+    <div class="ms-result">Example (UAE energy infrastructure, March 2026): E = (0.40×5) + (0.30×4) + (0.20×5) + (0.10×5) = <span>4.70</span></div>
+  </div>
+
+  <!-- FACTOR V -->
+  <div class="math-step">
+    <div class="ms-header">
+      <div class="ms-num">V</div>
+      <div class="ms-title">Vulnerability — how protected is the location against an attack</div>
+    </div>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.7">Important: for Vulnerability, <strong>a higher score means weaker protection</strong>. A score of 5 means the location has no physical hardening, no fast response capability, no backup systems. A score of 1 means it is well-defended and resilient.</p>
+    <div class="ms-formula">V = (0.30 × F) + (0.25 × R) + (0.20 × B) + (0.15 × C) + (0.10 × M)</div>
+    <div class="ms-sub-grid">
+      <div class="ms-sub-item">
+        <div class="ms-sub-key">F — Physical Fragility</div>
+        <div class="ms-sub-name">Structural hardening of buildings and infrastructure. Exposed pipelines, open-air equipment = high score.</div>
+        <div class="ms-sub-weight">Weight: 30% · Scale: 1–5</div>
+      </div>
+      <div class="ms-sub-item">
+        <div class="ms-sub-key">R — Response Capability</div>
+        <div class="ms-sub-name">Speed and effectiveness of emergency, military, and medical response. Slower = more vulnerable.</div>
+        <div class="ms-sub-weight">Weight: 25% · Scale: 1–5</div>
+      </div>
+      <div class="ms-sub-item">
+        <div class="ms-sub-key">B — Passive Protection</div>
+        <div class="ms-sub-name">Shelters, blast barriers, dispersion of personnel, redundant access routes.</div>
+        <div class="ms-sub-weight">Weight: 20% · Scale: 1–5</div>
+      </div>
+      <div class="ms-sub-item">
+        <div class="ms-sub-key">C — Operational Continuity</div>
+        <div class="ms-sub-name">Can operations continue after an attack? Redundant power, communications, command systems.</div>
+        <div class="ms-sub-weight">Weight: 15% · Scale: 1–5</div>
+      </div>
+      <div class="ms-sub-item">
+        <div class="ms-sub-key">M — Monitoring</div>
+        <div class="ms-sub-name">Early warning systems, surveillance coverage, threat detection capability. Gaps increase vulnerability.</div>
+        <div class="ms-sub-weight">Weight: 10% · Scale: 1–5</div>
+      </div>
+    </div>
+    <div class="ms-result">Example (UAE energy infrastructure, March 2026): V = (0.30×3) + (0.25×3) + (0.20×3) + (0.15×4) + (0.10×2) = <span>3.05</span></div>
+  </div>
+
+  <!-- FACTOR I -->
+  <div class="math-step">
+    <div class="ms-header">
+      <div class="ms-num">I</div>
+      <div class="ms-title">Impact — consequences if an attack actually succeeds</div>
+    </div>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.7">Impact measures the downstream consequences of a successful strike. Even a location with moderate threat and low vulnerability may warrant high attention if the impact of a single successful hit would be catastrophic.</p>
+    <div class="ms-formula">I = (0.35 × O) + (0.25 × H) + (0.20 × E) + (0.20 × S)</div>
+    <div class="ms-sub-grid">
+      <div class="ms-sub-item">
+        <div class="ms-sub-key">O — Operational Impact</div>
+        <div class="ms-sub-name">Disruption to mission-critical operations. Airport closure, refinery shutdown, base destruction.</div>
+        <div class="ms-sub-weight">Weight: 35% · Scale: 1–5</div>
+      </div>
+      <div class="ms-sub-item">
+        <div class="ms-sub-key">H — Human Impact</div>
+        <div class="ms-sub-name">Potential casualties — personnel and civilian populations. Triggers automatic alert if score = 5.</div>
+        <div class="ms-sub-weight">Weight: 25% · Scale: 1–5</div>
+      </div>
+      <div class="ms-sub-item">
+        <div class="ms-sub-key">E — Economic Impact</div>
+        <div class="ms-sub-name">Financial damage, supply chain disruption, market impact. Energy infrastructure scores highest here.</div>
+        <div class="ms-sub-weight">Weight: 20% · Scale: 1–5</div>
+      </div>
+      <div class="ms-sub-item">
+        <div class="ms-sub-key">S — Symbolic / Political Impact</div>
+        <div class="ms-sub-name">Psychological and political significance. Embassies, landmarks, command centers score high on this axis.</div>
+        <div class="ms-sub-weight">Weight: 20% · Scale: 1–5</div>
+      </div>
+    </div>
+    <div class="ms-result">Example (UAE energy infrastructure, March 2026): I = (0.35×5) + (0.25×4) + (0.20×5) + (0.20×4) = <span>4.55</span></div>
+  </div>
+
+  <!-- FINAL CALCULATION -->
+  <div class="card" style="border-left:3px solid var(--accent)">
+    <div class="card-title">Final Score Calculation · UAE Energy Infrastructure Example</div>
+    <div style="font-family:var(--mono);font-size:13px;color:var(--text2);line-height:2.2">
+      <div>A (Threat) = <span style="color:var(--accent)">4.80</span> &nbsp; E (Exposure) = <span style="color:var(--accent)">4.70</span> &nbsp; V (Vulnerability) = <span style="color:var(--accent)">3.05</span> &nbsp; I (Impact) = <span style="color:var(--accent)">4.55</span></div>
+      <div>Raw score = 4.80 × 4.70 × 3.05 × 4.55 = <span style="color:var(--accent)">313.4</span></div>
+      <div>Normalized = (313.4 ÷ 625) × 100 = <span style="color:var(--crit);font-size:18px;font-weight:600">50.1</span> → <span style="color:var(--rel)">RELEVANT / approaching HIGH</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3: ATTACK TYPES -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">03</div>
+    <div>
+      <div class="section-title">Documented Attack Types</div>
+      <div class="section-sub">Historical distribution from Operation Epic Fury (Feb–Mar 2026) and prior campaigns</div>
+    </div>
+  </div>
+  <p class="explain">Iran's retaliatory doctrine combines three primary weapons systems. Each has distinct characteristics that affect which locations are at risk and how defenses should respond. Understanding the mix matters because <strong>drone defense and missile defense require completely different infrastructure</strong>.</p>
+  <div class="attack-grid">
+    <div class="at-card">
+      <div class="at-icon" style="color:var(--red)">▲</div>
+      <div class="at-name">Ballistic Missiles</div>
+      <div class="at-pct" style="color:var(--red)">~32%</div>
+      <div class="at-desc">High-speed, high-altitude projectiles used against fixed, high-value strategic targets. Require Patriot or THAAD systems to intercept. Very expensive — Iran deploys these selectively.</div>
+      <div class="at-targets">
+        <div class="at-targets-label">Documented targets (2026)</div>
+        <div class="at-target-item">Al Dhafra Air Base (UAE)</div>
+        <div class="at-target-item">Israeli population centers</div>
+        <div class="at-target-item">US radar systems (Jordan, Qatar)</div>
+        <div class="at-target-item">Ruwais Oil Refinery (UAE)</div>
+      </div>
+    </div>
+    <div class="at-card">
+      <div class="at-icon" style="color:var(--yellow)">◆</div>
+      <div class="at-name">Shahed Drones (OWA)</div>
+      <div class="at-pct" style="color:var(--yellow)">~61%</div>
+      <div class="at-desc">One-way attack drones flying at ~185 km/h at low altitude. Cheap to mass-produce, difficult to detect on radar. Primary tool for sustained pressure. Even one successful drone can pierce a sense of security.</div>
+      <div class="at-targets">
+        <div class="at-targets-label">Documented targets (2026)</div>
+        <div class="at-target-item">Dubai International Airport</div>
+        <div class="at-target-item">Palm Jumeirah (hotel area)</div>
+        <div class="at-target-item">Fujairah industrial zone</div>
+        <div class="at-target-item">AWS data center (mec1-az2)</div>
+      </div>
+    </div>
+    <div class="at-card">
+      <div class="at-icon" style="color:var(--accent2)">●</div>
+      <div class="at-name">Cruise Missiles</div>
+      <div class="at-pct" style="color:var(--accent2)">~7%</div>
+      <div class="at-desc">Precision-guided, terrain-following missiles. Used for very specific high-value targets. Fewer in number but higher precision than ballistic missiles. Intercepted by David's Sling and Patriot systems.</div>
+      <div class="at-targets">
+        <div class="at-targets-label">Documented targets (2026)</div>
+        <div class="at-target-item">Strategic military facilities</div>
+        <div class="at-target-item">Command and control nodes</div>
+        <div class="at-target-item">Energy infrastructure hubs</div>
+        <div class="at-target-item">Naval assets (historically)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4: COUNTRY RISK TABLE -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">04</div>
+    <div>
+      <div class="section-title">Country Risk Ranking</div>
+      <div class="section-sub">Scores calibrated from documented attack volumes, target types, and defense capability assessments</div>
+    </div>
+  </div>
+  <p class="explain">Click any row to expand the historical evidence and recommended defensive actions for that country.</p>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table class="country-table" id="risk-table"></table>
+  </div>
+  <div id="country-detail" class="detail-panel"></div>
+</div>
+
+<!-- SECTION 5: HEAT MAP -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">05</div>
+    <div>
+      <div class="section-title">Risk Heat Map</div>
+      <div class="section-sub">Visual overview — color intensity corresponds to final Rn score</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="legend">
+      <div class="leg"><div class="leg-box" style="background:rgba(224,82,82,.25);border:1px solid var(--crit)"></div><span style="color:var(--crit)">Critical 61–100</span></div>
+      <div class="leg"><div class="leg-box" style="background:rgba(224,138,60,.2);border:1px solid var(--high)"></div><span style="color:var(--high)">High 41–60</span></div>
+      <div class="leg"><div class="leg-box" style="background:rgba(212,184,74,.15);border:1px solid var(--rel)"></div><span style="color:var(--rel)">Relevant 21–40</span></div>
+      <div class="leg"><div class="leg-box" style="background:rgba(90,173,122,.12);border:1px solid var(--mod)"></div><span style="color:var(--mod)">Moderate 0–20</span></div>
+    </div>
+    <div class="heatmap-grid" id="heatmap"></div>
+    <div id="hm-detail" class="detail-panel" style="margin-top:12px"></div>
+  </div>
+</div>
+
+<!-- SECTION 6: INTERACTIVE CALCULATOR -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">06</div>
+    <div>
+      <div class="section-title">Risk Score Calculator</div>
+      <div class="section-sub">Adjust all four main factors for any location or installation in your operational context</div>
+    </div>
+  </div>
+  <p class="explain">Use this calculator to score any specific location, installation, or asset. Move the sliders to reflect your assessment of each factor. The formula recalculates in real time. You can use sub-formula weights from Section 02 to derive each main factor score first, then plug them in here.</p>
+  <div class="calc-grid">
+    <div>
+      <div class="slider-block">
+        <div class="slider-top"><div class="slider-label">A · Threat</div><div class="slider-val" id="va">4.5</div></div>
+        <div class="slider-sub">Strategic priority + historical pattern + signaling + regional tension</div>
+        <input type="range" min="1" max="5" step="0.1" value="4.5" id="sa" oninput="recalc()">
+      </div>
+      <div class="slider-block">
+        <div class="slider-top"><div class="slider-label">E · Exposure</div><div class="slider-val" id="ve">4.0</div></div>
+        <div class="slider-sub">Geography + asset density + logistical connectivity + observability</div>
+        <input type="range" min="1" max="5" step="0.1" value="4.0" id="se" oninput="recalc()">
+      </div>
+      <div class="slider-block">
+        <div class="slider-top"><div class="slider-label">V · Vulnerability</div><div class="slider-val" id="vv">3.5</div></div>
+        <div class="slider-sub">Physical fragility + response capacity + passive protection + continuity + monitoring</div>
+        <input type="range" min="1" max="5" step="0.1" value="3.5" id="sv" oninput="recalc()">
+      </div>
+      <div class="slider-block">
+        <div class="slider-top"><div class="slider-label">I · Impact</div><div class="slider-val" id="vi">4.2</div></div>
+        <div class="slider-sub">Operational + human + economic + symbolic/political consequences</div>
+        <input type="range" min="1" max="5" step="0.1" value="4.2" id="si" oninput="recalc()">
+      </div>
+    </div>
+    <div>
+      <div class="result-panel">
+        <div class="result-label">Normalized Risk Score · Rn</div>
+        <div class="result-score" id="rs">84.7</div>
+        <div class="result-badge" id="rb"></div>
+        <div class="result-formula" id="rf"></div>
+        <div class="result-action" id="ra"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 7: ALERT TRIGGERS -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">07</div>
+    <div>
+      <div class="section-title">Automatic Alert Triggers</div>
+      <div class="section-sub">Rules that activate alerts independent of the total score</div>
+    </div>
+  </div>
+  <p class="explain">
+    The final score alone is not always sufficient. Some individual sub-variable values should trigger an automatic protective response regardless of how the other factors score. These are called <strong>hard triggers</strong>. Additionally, the <strong>trend</strong> of the score over time matters as much as its absolute value.
+  </p>
+  <div class="factor-grid">
+    <div class="factor-card">
+      <div class="fc-header">
+        <div class="fc-letter" style="color:var(--crit);border-color:rgba(224,82,82,.4);background:rgba(224,82,82,.1)">!</div>
+        <div class="fc-name">Hard triggers (immediate yellow alert)</div>
+      </div>
+      <div class="fc-desc">These single-variable conditions activate alert status regardless of total score:</div>
+      <div class="fc-sub">
+        <div class="fc-sub-item">Human Impact (H) = 5 → risk to life confirmed</div>
+        <div class="fc-sub-item">Strategic Priority (P) = 5 → maximum target value</div>
+        <div class="fc-sub-item">Physical Fragility (F) = 5 → unprotected asset</div>
+        <div class="fc-sub-item">Signaling (S) = 5 → explicit public threat declared</div>
+      </div>
+    </div>
+    <div class="factor-card">
+      <div class="fc-header">
+        <div class="fc-letter" style="color:var(--accent2);border-color:rgba(140,184,212,.4);background:rgba(140,184,212,.1)">Δ</div>
+        <div class="fc-name">Trend monitoring (daily delta)</div>
+      </div>
+      <div class="fc-desc">Track how the score changes over time using these formulas:</div>
+      <div class="fc-sub">
+        <div class="fc-sub-item">ΔR = R(today) − R(yesterday) → daily change</div>
+        <div class="fc-sub-item">MM3 = (R1 + R2 + R3) ÷ 3 → 3-day moving average</div>
+        <div class="fc-sub-item">If ΔR &gt; +10 in 24h → yellow alert regardless of total</div>
+        <div class="fc-sub-item">If MM3 rises for 3 consecutive days → posture review</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 8: SOURCES -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">08</div>
+    <div>
+      <div class="section-title">Historical Evidence Base</div>
+      <div class="section-sub">Primary sources used to calibrate scores in this model</div>
+    </div>
+  </div>
+  <p class="explain">All country scores in this model are calibrated from open-source, publicly documented events. The model does not speculate about classified capabilities. Score weights reflect the relative frequency and documented lethality of each attack vector.</p>
+  <div class="card">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div>
+        <div class="card-title">Key events calibrating scores</div>
+        <div style="font-size:12px;color:var(--text2);line-height:2">
+          <div>— April 2024: First direct Iran→Israel missile/drone strike</div>
+          <div>— October 2024: Second direct Iran→Israel strike</div>
+          <div>— June 2025: 12-Day War · ~550 ballistic missiles + 1,000+ drones</div>
+          <div>— Feb 28, 2026: Operation Epic Fury begins (US-Israel on Iran)</div>
+          <div>— March 1–8, 2026: UAE absorbs 55% of total recorded strikes</div>
+          <div>— March 2026: THAAD radar destroyed in Jordan + Qatar</div>
+          <div>— March 2026: Ruwais refinery fire · 922k bpd shutdown</div>
+          <div>— March 2026: Dubai airport temporary closure (drone incident)</div>
+        </div>
+      </div>
+      <div>
+        <div class="card-title">Source organizations</div>
+        <div class="source-box">
+          <div class="source-box-title">Open-source references</div>
+          <div class="source-item">CSIS — Center for Strategic and International Studies</div>
+          <div class="source-item">Al Jazeera — conflict tracking and day-by-day maps</div>
+          <div class="source-item">PBS NewsHour — Gulf reporting (Doha correspondent)</div>
+          <div class="source-item">ACLED — Armed Conflict Location & Event Data</div>
+          <div class="source-item">UAE Ministry of Defence — official strike tallies</div>
+          <div class="source-item">Israel Institute for National Security Studies</div>
+          <div class="source-item">Wikipedia — Twelve-Day War, 2026 UAE strikes articles</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-left">
+    DEFENSIVE RISK MODEL v1.0 · March 2026<br>
+    Purpose: institutional security planning · not offensive use
+  </div>
+  <div class="footer-right">
+    Formula: Rn = (A×E×V×I) ÷ 625 × 100 · Scale 1–5 per variable
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<script>
+const countries = [
+  {name:"UAE",A:4.9,E:4.8,V:3.2,I:4.9,
+   hist:"Absorbed ~55% of all documented strikes in Operation Epic Fury (March 1–8, 2026): 1,422 drones and 246 ballistic missiles recorded in the first week alone. Confirmed targets: Dubai International Airport (drone strike, temporary closure), Al Dhafra Air Base (US forces), Palm Jumeirah / Fairmont Hotel (Shahed drone, fire), Jebel Ali Port (debris fire), Ruwais Oil Refinery (922,000 bpd offline), French naval base Camp de la Paix, AWS data center mec1-az2 (fire, power shutdown). Iran's targeting logic: UAE concentrates the highest density of US military assets, commercial hubs, and energy infrastructure in a small, easily identified territory.",
+   action:"CRITICAL POSTURE: Immediate shelter-in-place protocols · 24h alert cycles · Disperse non-essential personnel from high-value sites · Activate backup power and communications · Coordinate with air defense operators on incoming threat corridors · Prepare business continuity plans for energy and logistics operations."},
+  {name:"Israel",A:4.8,E:4.7,V:2.8,I:4.8,
+   hist:"Primary political target since April 2024 first direct Iranian strike. During 12-Day War (June 2025): ~550 ballistic missiles + 1,000+ one-way attack drones launched. Confirmed targets in 2026 campaign: northern Israel population centers (civilian casualties confirmed), BAZAN oil refinery Haifa (pipes and transmission lines damaged, fire), residential buildings (interceptor debris casualties). Peak: ~90 missiles day 1, ~60 day 2, declining to single digits by week 3. Iran deployed cluster munitions — condemned by Amnesty International. Hezbollah reopened Lebanon front March 2, 2026: 100+ rockets in single evening, 210+ total since resumption.",
+   action:"HIGH POSTURE: Iron Dome + David's Sling in continuous operation · Population shelter compliance monitoring · Northern border evacuation protocol review · Critical infrastructure (energy, water, data) redundancy activation · Coordination with US 6th Fleet in Eastern Mediterranean."},
+  {name:"Saudi Arabia",A:4.5,E:4.3,V:3.0,I:4.7,
+   hist:"Documented targets: Riyadh area, Al-Kharj region (Prince Sultan Air Base — repeated drone and missile waves), Eastern Province including Ras Tanura refinery (one of world's largest, 922k bpd capacity). Historical context: Houthi drone and missile strikes on Saudi oil infrastructure in 2019 (Abqaiq-Khurais attack destroyed 5% of global oil supply temporarily) established this target pattern. Saudi Arabia hosts US forces supporting Iran campaign operations — making it a high-priority retaliation target in Iran's doctrine of attacking 'US military presence in the Gulf.'",
+   action:"HIGH POSTURE: THAAD battery status verification · Energy infrastructure dispersal planning · Prince Sultan Air Base force protection elevation · Coordination with US Central Command on threat corridors · LNG and oil production contingency planning."},
+  {name:"Qatar",A:4.3,E:4.1,V:3.3,I:4.6,
+   hist:"Hosts Al Udeid Air Base — largest US military installation in the Middle East (~10,000+ US personnel). AN/FPS-132 phased array radar destroyed in documented strike during current conflict. Multiple missile interceptions confirmed. LNG export disruptions reported. Iran's foreign minister publicly stated 'we are only attacking US presence, not Qatar' — but Qatar FM rejected this, noting civilian and infrastructure damage was occurring. Qatar has historically served as a diplomatic channel between Iran and the West, but was explicitly named in Iranian threat doctrine.",
+   action:"HIGH POSTURE: Al Udeid force protection maximum · Radar replacement coordination · LNG facility protection and contingency · Diplomatic channel maintenance (Qatar's dual role as host and mediator) · Civilian evacuation planning for Doha if escalation continues."},
+  {name:"Bahrain",A:4.0,E:3.9,V:3.4,I:4.2,
+   hist:"Home to US Naval Forces Central Command and the US 5th Fleet — one of the most significant naval presences in the region. Included in Iranian multi-country strike packages confirmed in public statements. Strike alerts documented. THAAD and Patriot systems deployed for defense. Small geographic size means any strike has high relative impact. Iran's doctrine explicitly targets 'all US assets throughout the region' — Bahrain's naval base is a primary asset in that list.",
+   action:"RELEVANT-HIGH POSTURE: Naval base force protection elevation · Evacuation planning for US and allied military families · Port security and maritime patrol enhancement · Coordination with 5th Fleet on threat warning systems."},
+  {name:"Kuwait",A:3.8,E:3.7,V:3.5,I:4.0,
+   hist:"Multiple active US military bases including Camp Arifjan and Ali Al Salem Air Base. Alerts confirmed in current conflict. Historical vulnerability: during 1990 Gulf War, became primary staging ground for regional conflict. Iranian proxy networks (Kata'ib Hezbollah and others) have historically operated near Kuwait's borders in Iraq. Pattern: Kuwait hosts significant US logistics infrastructure making it a target in Iran's 'cost imposition' strategy even without direct military confrontation.",
+   action:"RELEVANT POSTURE: Perimeter security reinforcement on US bases · Shelter-in-place protocols activation · Supply chain and logistics contingency planning · Enhanced monitoring of Iraqi border corridor for proxy activity."},
+  {name:"Jordan",A:3.5,E:3.6,V:3.6,I:3.8,
+   hist:"Muwaffaq Salti Air Base: AN/TPY-2 THAAD radar system destroyed in documented strike — satellite imagery and social media photos confirmed. Base hosts 60+ US aircraft including F-35, F-15E, and EA-18G Growler. Missile interceptions over Amman confirmed, with falling debris near residential areas (no casualties reported). Jordan shot down Iranian drones in April 2024 (first direct Iran→Israel strike), establishing it as an active participant in air defense — and therefore a target in Iranian doctrine.",
+   action:"RELEVANT POSTURE: Radar replacement and air defense gap assessment · Muwaffaq Salti aircraft dispersal · Amman civilian alert infrastructure testing · Border monitoring with Syria (Iranian missile transit corridor) · Communication with Israel on shared air defense coordination."},
+  {name:"Iraq",A:3.2,E:3.4,V:4.0,I:3.6,
+   hist:"Active US bases (Al-Assad Air Base, Erbil International Airport — drone attack attempted and intercepted). Iranian missiles transited Syrian and Iraqi airspace in strikes on Israel. Pro-Iran militias (Kata'ib Hezbollah, PMF factions) maintain active presence. High vulnerability score reflects weak central government control over militant groups, porous borders, and proximity to Iran. Historically: Iran-backed groups conducted 80+ attacks on US forces in Iraq in 2023–2024 via drones and rockets.",
+   action:"RELEVANT POSTURE: Erbil and Baghdad airport security elevation · US base hardening and drone detection layering · Monitoring PMF movements near US facilities · Contingency for corridor use in cross-border attacks."},
+  {name:"Lebanon",A:3.4,E:3.5,V:4.2,I:3.7,
+   hist:"Hezbollah re-entered the conflict March 2, 2026 — first launches since November 2024 ceasefire. Documented: 100+ rockets in single evening, 210+ total projectiles since resumption per UNIFIL monitoring. Hezbollah functions as Iran's primary proxy for direct pressure on Israel's northern border. High vulnerability score reflects the Lebanese state's inability to control Hezbollah operations on its territory, civilian infrastructure concentrated near conflict zones, and UNIFIL's limited enforcement capacity.",
+   action:"RELEVANT POSTURE: Northern Israel border evacuation protocol · UNIFIL coordination and communication · Monitoring Hezbollah repositioning in southern Lebanon · Civilian infrastructure hardening in border towns · Coordination with Lebanese Armed Forces on shared threat assessment."},
+  {name:"Oman",A:3.0,E:3.2,V:3.8,I:3.5,
+   hist:"Included in Iranian multi-country strike alert packages. Historically serves as the key back-channel diplomatic conduit between Iran and the US/West — Oman brokered the initial JCPOA talks. This dual role creates ambiguity: Oman is less likely to be a primary target but more exposed than neutral countries because of proximity to the Strait of Hormuz (Oman controls the Musandam Peninsula) and because disrupting Oman would eliminate Iran's own diplomatic channel. Strait of Hormuz closure (documented in current conflict) directly affects Omani territorial waters.",
+   action:"MODERATE POSTURE: Strait of Hormuz maritime security coordination · Diplomatic channel protection and continuity · Port and energy infrastructure monitoring (Salalah port, Sohar industrial area) · Contingency for personnel if escalation reaches Omani territory."}
+];
+
+function calcScore(c){return Math.round(c.A*c.E*c.V*c.I/625*100);}
+function getCol(s){
+  if(s>=61) return {text:'var(--crit)',badge:'badge-crit',label:'Critical',bg:'rgba(224,82,82,.1)',border:'rgba(224,82,82,.25)'};
+  if(s>=41) return {text:'var(--high)',badge:'badge-high',label:'High',bg:'rgba(224,138,60,.1)',border:'rgba(224,138,60,.2)'};
+  if(s>=21) return {text:'var(--rel)',badge:'badge-rel',label:'Relevant',bg:'rgba(212,184,74,.08)',border:'rgba(212,184,74,.2)'};
+  return {text:'var(--mod)',badge:'badge-mod',label:'Moderate',bg:'rgba(90,173,122,.08)',border:'rgba(90,173,122,.2)'};
+}
+
+const sorted = [...countries].sort((a,b)=>calcScore(b)-calcScore(a));
+let activeRow = null;
+let activeHm = null;
+
+// BUILD TABLE
+const tbl = document.getElementById('risk-table');
+tbl.innerHTML = `<thead><tr>
+  <th>Country</th><th>Score</th><th>Classification</th><th>A</th><th>E</th><th>V</th><th>I</th><th style="min-width:120px">Risk Bar</th>
+</tr></thead><tbody></tbody>`;
+const tbody = tbl.querySelector('tbody');
+sorted.forEach((c,i)=>{
+  const s = calcScore(c);
+  const col = getCol(s);
+  const pct = Math.min(100,s);
+  const barCol = s>=61?'var(--crit)':s>=41?'var(--high)':s>=21?'var(--rel)':'var(--mod)';
+  const tr = document.createElement('tr');
+  tr.style.cursor='pointer';
+  tr.innerHTML = `
+    <td><div class="ct-name">${c.name}</div></td>
+    <td><div class="ct-score" style="color:${col.text}">${s}</div></td>
+    <td><span class="badge ${col.badge}">${col.label}</span></td>
+    <td class="ct-mono">${c.A}</td>
+    <td class="ct-mono">${c.E}</td>
+    <td class="ct-mono">${c.V}</td>
+    <td class="ct-mono">${c.I}</td>
+    <td class="bar-cell"><div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${barCol}"></div></div></td>`;
+  tr.onclick = ()=>{
+    const dp = document.getElementById('country-detail');
+    if(activeRow===i){dp.classList.remove('show');activeRow=null;return;}
+    activeRow=i;
+    dp.innerHTML=`<div class="dp-name">${c.name} · Score ${s} · ${col.label}</div>
+    <div class="dp-hist"><strong>Historical evidence:</strong><br>${c.hist}</div>
+    <div class="dp-action"><strong>Recommended defensive action:</strong><br>${c.action}</div>
+    <div class="dp-factors">
+      <div class="dp-factor">Threat (A) = <span>${c.A}</span></div>
+      <div class="dp-factor">Exposure (E) = <span>${c.E}</span></div>
+      <div class="dp-factor">Vulnerability (V) = <span>${c.V}</span></div>
+      <div class="dp-factor">Impact (I) = <span>${c.I}</span></div>
+      <div class="dp-factor">Raw = <span>${(c.A*c.E*c.V*c.I).toFixed(1)}</span></div>
+      <div class="dp-factor">Rn = <span>${s}</span></div>
+    </div>`;
+    dp.classList.add('show');
+  };
+  tbody.appendChild(tr);
+});
+
+// BUILD HEATMAP
+const hm = document.getElementById('heatmap');
+sorted.forEach((c,i)=>{
+  const s = calcScore(c);
+  const col = getCol(s);
+  const cell = document.createElement('div');
+  cell.className='hm-cell';
+  cell.style.background=col.bg;
+  cell.style.borderColor=col.border;
+  cell.innerHTML=`<div class="hm-name" style="color:${col.text}">${c.name}</div>
+  <div class="hm-score" style="color:${col.text}">${s}</div>
+  <div class="hm-lbl" style="color:${col.text}">${col.label}</div>`;
+  cell.onclick=()=>{
+    const hd=document.getElementById('hm-detail');
+    if(activeHm===i){hd.classList.remove('show');activeHm=null;return;}
+    activeHm=i;
+    hd.innerHTML=`<div class="dp-name">${c.name} · ${col.label} (${s})</div>
+    <div class="dp-hist">${c.hist.substring(0,400)}...</div>
+    <div class="dp-action"><strong>Action:</strong> ${c.action.substring(0,200)}...</div>`;
+    hd.classList.add('show');
+  };
+  hm.appendChild(cell);
+});
+
+// CALCULATOR
+function recalc(){
+  const A=parseFloat(document.getElementById('sa').value);
+  const E=parseFloat(document.getElementById('se').value);
+  const V=parseFloat(document.getElementById('sv').value);
+  const I=parseFloat(document.getElementById('si').value);
+  document.getElementById('va').textContent=A.toFixed(1);
+  document.getElementById('ve').textContent=E.toFixed(1);
+  document.getElementById('vv').textContent=V.toFixed(1);
+  document.getElementById('vi').textContent=I.toFixed(1);
+  const raw=A*E*V*I;
+  const s=+(raw/625*100).toFixed(1);
+  const col=getCol(s);
+  const rs=document.getElementById('rs');
+  rs.textContent=s;
+  rs.style.color=col.text;
+  const rb=document.getElementById('rb');
+  rb.innerHTML=`<span class="badge ${col.badge}">${col.label}</span>`;
+  document.getElementById('rf').innerHTML=
+    `A × E × V × I = <span>${A.toFixed(1)} × ${E.toFixed(1)} × ${V.toFixed(1)} × ${I.toFixed(1)}</span>\n` +
+    `Raw = <span>${raw.toFixed(2)}</span>\n` +
+    `Rn = (${raw.toFixed(2)} ÷ 625) × 100 = <span>${s}</span>`;
+  const actions={
+    crit:'Immediate contingency activation · Disperse non-essential personnel · 24h alert posture · Activate shelter-in-place · Notify leadership chain.',
+    high:'Partial contingency activation · Enhanced monitoring 24h · Review evacuation routes · Test backup communications.',
+    rel:'Enhanced standard monitoring · Review contingency plans · Assess vulnerability reduction options.',
+    mod:'Routine monitoring · Periodic risk review · No immediate action required.'
+  };
+  const aKey=s>=61?'crit':s>=41?'high':s>=21?'rel':'mod';
+  document.getElementById('ra').innerHTML=`<strong style="color:${col.text}">Recommended action:</strong><br><span style="color:var(--text2)">${actions[aKey]}</span>`;
+}
+recalc();
+
+// JSON EXPORT
+function exportData(){
+  const out=sorted.map(c=>({country:c.name,score:calcScore(c),A:c.A,E:c.E,V:c.V,I:c.I,classification:getCol(calcScore(c)).label}));
+  const blob=new Blob([JSON.stringify(out,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='iran_risk_scores.json';
+  a.click();
+}
+</script>
+</body>
+</html>
